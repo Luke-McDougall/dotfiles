@@ -1,0 +1,27 @@
+# terminal emulator
+super + Return
+    alacritty
+
+# program launcher
+super + @space
+    dmenu_run
+
+super + Escape
+    pkill -USR1 -x sxhkd
+
+# close and kill
+super + {_,shift + }q
+    bspc node -{c,k}
+
+super + m
+    bspc desktop -1 next
+
+super + {_,shift + }{1-9,0}
+    bspc {desktop -f,node -d} '^{1-9,10}'
+
+super + {h,j,k,l}
+	bspc node -f {west,south,north,east}
+
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east} 
+
