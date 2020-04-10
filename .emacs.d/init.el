@@ -206,6 +206,10 @@
   :bind (("<f8>" . window-toggle-side-windows))
 )
 
+(use-package vc
+  :config
+  (setq vc-follow-symlinks t))
+
 (use-package emacs
   :config
   (setq mode-line-percent-position nil)
@@ -254,7 +258,6 @@
     (define-key evil-normal-state-local-map (kbd "C-j")     'org-next-visible-heading)
     (define-key evil-normal-state-local-map (kbd "C-k")     'org-previous-visible-heading)
     (define-key evil-normal-state-local-map (kbd "SPC s w") 'flyspell-auto-correct-word)
-    (define-key evil-normal-state-local-map (kbd "SPC q")   'org-agenda-quit)
     (define-key xah-math-input-keymap (kbd "S-SPC") nil)
     (define-key xah-math-input-keymap (kbd "<f1>") 'xah-math-input-change-to-symbol)
     (xah-math-input-mode 1)
