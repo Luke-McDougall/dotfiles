@@ -13,8 +13,11 @@ super + Escape
 super + {_,shift + }q
     bspc node -{c,k}
 
+super + {_,shift + }f
+    bspc node -t {fullscreen, tiled}
+
 super + m
-    bspc desktop -1 next
+    bspc desktop -l CYCLE_DIR
 
 super + {_,shift + }{1-9,0}
     bspc {desktop -f,node -d} '^{1-9,10}'

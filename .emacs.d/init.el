@@ -78,6 +78,7 @@
               evil-search-module 'evil-search
               evil-emacs-state-modes '(org-agenda-mode))
 
+  :config 
   ;; Center point after any jumps
   (defun my-center-line (&rest _)
     (evil-scroll-line-to-center nil))
@@ -99,8 +100,6 @@
   (advice-add 'rg :after #'switch-to-window-rg)
   (advice-add 'luke/rg-search-file :after #'switch-to-window-rg)
   (advice-add 'luke/rg-search-directory :after #'switch-to-window-rg)
-
-  :config 
   (defun luke/config ()
     (interactive)
     (find-file "~/.emacs.d/init.el"))
@@ -206,6 +205,26 @@
   :bind (("<f8>" . window-toggle-side-windows))
 )
 
+(use-package man
+  :init
+  (defun man-mode-keybindings ()
+    (evil-normal-state)
+    (define-key evil-normal-state-local-map (kbd "\r")  'man-follow)
+    (define-key evil-normal-state-local-map (kbd "p")   'Man-next-section)
+    (define-key evil-normal-state-local-map (kbd "o")   'Man-previous-section)
+    (define-key evil-normal-state-local-map (kbd "\en") 'Man-next-manpage)
+    (define-key evil-normal-state-local-map (kbd "\ep") 'Man-previous-manpage)
+    (define-key evil-normal-state-local-map (kbd ".")   'beginning-of-buffer)
+    (define-key evil-normal-state-local-map (kbd "r")   'Man-follow-manual-reference)
+    (define-key evil-normal-state-local-map (kbd "g")   'Man-goto-section)
+    (define-key evil-normal-state-local-map (kbd "s")   'Man-goto-see-also-section)
+    (define-key evil-normal-state-local-map (kbd "q")   'Man-kill)
+    (define-key evil-normal-state-local-map (kbd "u")   'Man-update-manpage)
+    (define-key evil-normal-state-local-map (kbd "m")   'man))
+
+  :hook ((Man-mode . man-mode-keybindings))
+  )
+
 (use-package vc
   :config
   (setq vc-follow-symlinks t))
@@ -220,6 +239,7 @@
                   " ["
                   (:eval
                    (cond
+                    ((eq evil-state 'motion) "MOTION")
                     ((eq evil-state 'emacs)  "EMACS")
                     ((eq evil-state 'normal) "NORMAL")
                     ((eq evil-state 'visual) "VISUAL")
@@ -246,7 +266,7 @@
   (setq display-time-interval 60)
   (setq display-time-mail-directory nil)
   (setq display-time-default-load-average nil)
-  :hook (after-init . display-time-mode))
+  :hook ((after-init . display-time-mode)))
 
 (use-package org
   :config
@@ -320,6 +340,8 @@
     "Setup bindings for dired buffer."
     (interactive)
     (local-unset-key (kbd "SPC"))
+    (define-key dired-mode-map "n" nil)
+    (define-key dired-mode-map "N" nil)
     (define-key evil-normal-state-local-map (kbd "<backspace>") 'dired-up-directory)
     (define-key evil-normal-state-local-map "q" 'kill-this-buffer)
     (define-key evil-normal-state-local-map "c" 'dired-do-copy)
@@ -363,10 +385,6 @@
 
 (add-hook 'java-mode-hook 'java-custom-indent-settings)
 
-(defun luke/switch-source-header ()
-  (interactive)
-  (if (eq (cdr (split-string buffer-string)))))
-
 (use-package rust-mode
   :ensure t
   :config
@@ -391,6 +409,7 @@
   :config
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
+  (setq completion-ignore-case t)
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-show-help nil)
