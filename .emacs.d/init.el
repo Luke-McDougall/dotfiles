@@ -317,7 +317,10 @@
   :init (which-key-mode))
 
 (use-package ibuffer
-  :init (setq ibuffer-expert t)
+  :config
+  (setq ibuffer-expert t)
+  (setq ibuffer-use-header-line t)
+
   (defun ibuffer-buffer-map ()
     (local-unset-key (kbd "SPC"))
     (define-key evil-normal-state-local-map (kbd "J") 'ibuffer-jump-to-buffer)
@@ -325,6 +328,7 @@
     (define-key evil-normal-state-local-map (kbd "k") 'ibuffer-backward-line)
     (define-key evil-normal-state-local-map (kbd "q") 'kill-this-buffer)
   )
+
   :hook ((ibuffer . ibuffer-buffer-map))
 )
 
@@ -346,7 +350,7 @@
   (setq rg-group-result t))
 
 (use-package dired
-  :init
+  :config
   (defun dired-buffer-map ()
     "Setup bindings for dired buffer."
     (define-key evil-normal-state-local-map (kbd "<backspace>") 'dired-up-directory)
