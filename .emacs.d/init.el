@@ -76,7 +76,19 @@
               evil-split-window-below t
               evil-want-Y-yank-to-eol t
               evil-search-module 'evil-search
-              evil-emacs-state-modes '(org-agenda-mode))
+              evil-emacs-state-modes '(org-agenda-mode)
+              evil-motion-state-modes 
+              '(apropos-mode
+                Buffer-menu-mode
+                calendar-mode
+                color-theme-mode
+                command-history-mode
+                compilation-mode
+                dictionary-mode
+                ert-results-mode
+                speedbar-mode
+                undo-tree-visualizer-mode
+                woman-mode))
 
   :config 
   ;; Center point after any jumps
@@ -208,7 +220,6 @@
 (use-package man
   :init
   (defun man-mode-keybindings ()
-    (evil-normal-state)
     (define-key evil-normal-state-local-map (kbd "\r")  'man-follow)
     (define-key evil-normal-state-local-map (kbd "p")   'Man-next-section)
     (define-key evil-normal-state-local-map (kbd "o")   'Man-previous-section)
@@ -338,15 +349,10 @@
   :init
   (defun dired-buffer-map ()
     "Setup bindings for dired buffer."
-    (interactive)
-    (local-unset-key (kbd "SPC"))
-    (define-key dired-mode-map "n" nil)
-    (define-key dired-mode-map "N" nil)
     (define-key evil-normal-state-local-map (kbd "<backspace>") 'dired-up-directory)
     (define-key evil-normal-state-local-map "q" 'kill-this-buffer)
-    (define-key evil-normal-state-local-map "c" 'dired-do-copy)
+    (define-key evil-normal-state-local-map "y" 'dired-do-copy)
     (define-key evil-normal-state-local-map "r" 'dired-do-rename)
-    (define-key evil-normal-state-local-map "C" 'dired-do-compress-to)
     (define-key evil-normal-state-local-map (kbd "\r") 'dired-find-file))
 
   (defun luke/dired ()
@@ -359,6 +365,12 @@
   (setq dired-delete-by-moving-to-trash t)
   (setq dired-listing-switches "-AFlv --group-directories-first")
   (setq dired-dwim-target t)
+
+  :bind (:map dired-mode-map
+              ("SPC" . nil)  ; Don't intercept leader key
+              ("n"   . nil)  ; Evil mode next/previous match keys
+              ("N"   . nil))
+
   :hook ((dired-mode . dired-hide-details-mode)
 	 (dired-mode . dired-buffer-map))
 )
@@ -372,18 +384,21 @@
 
 ;; C mode
 (setq-default indent-tabs-mode nil)
-(setq-default c-basic-offset 4)
-(setq-default c-default-style "k&r")
 
-(defun java-custom-indent-settings ()
-  "My preferred settings for indentation of java code."
-  (c-set-offset 'substatement-open 0)
-  (c-set-offset 'case-label '+)
-  (c-set-offset 'inline-open 0)
-  (c-set-offset 'statement-case-intro 0)
-)
+(use-package cc-mode
+  :config
+  (setq-default c-basic-offset 4)
+  (setq-default c-default-style "k&r")
 
-(add-hook 'java-mode-hook 'java-custom-indent-settings)
+  (defun java-custom-indent-settings ()
+    "My preferred settings for indentation of java code."
+    (c-set-offset 'substatement-open 0)
+    (c-set-offset 'case-label '+)
+    (c-set-offset 'inline-open 0)
+    (c-set-offset 'statement-case-intro 0))
+
+  :hook ((java-mode . java-custom-indent-settings))
+  )
 
 (use-package rust-mode
   :ensure t

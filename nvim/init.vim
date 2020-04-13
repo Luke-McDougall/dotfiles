@@ -79,6 +79,4 @@ nnoremap <F8> :TagbarToggle<CR>
 " Vertical split shortcut to open current file in both windows.
 nnoremap <Leader>v :vsp %<CR>
 " Quick save and quick savequit
-nnoremap <leader>w :w<CR>
-nnoremap <leader>q :wq<CR>
 nnoremap <leader>o :Files<CR>
