@@ -41,11 +41,6 @@
   (forward-char 1)
 )
 
-(defun luke/create-and-edit-file ()
-  (interactive)
-  (find-file)
-  (setq-local completion-styles '(basic)))
-
 (defun save-and-kill-buffer ()
   "Pretty self explanatory dude."
   (interactive)
@@ -95,7 +90,7 @@
   (defun my-center-line (&rest _)
     (evil-scroll-line-to-center nil))
 
-  (advice-add 'evil-search-next :after #'my-center-line)
+  (advice-add 'evil-ex-search-next :after #'my-center-line)
   (advice-add 'evil-jump-forward :after #'my-center-line)
   (advice-add 'evil-jump-backward :after #'my-center-line)
 
@@ -182,8 +177,9 @@
               ("SPC j p"   . evil-jump-backward)
 
               ;; prefix-d for 'dired' commands
-              ("SPC d d"   . luke/dired)
+              ("SPC d d"   . luke/dired-cwd)
               ("SPC d o"   . dired-other-window)
+              ("SPC D"     . dired)
 
               ;; Miscellaneous
 	      ("SPC SPC"   . find-file)
@@ -266,12 +262,13 @@
                   "  "
                   mode-name
                   "  "
-                  "%I  | "
-                  display-time-string
+                  "%I"
+                  ;;display-time-string
                   mode-line-end-spaces))
 )
 
 (use-package time
+  :disabled
   :config
   (setq display-time-format "%a %e %b <%H:%M>")
   (setq display-time-interval 60)
@@ -359,7 +356,7 @@
     (define-key evil-normal-state-local-map "r" 'dired-do-rename)
     (define-key evil-normal-state-local-map (kbd "\r") 'dired-find-file))
 
-  (defun luke/dired ()
+  (defun luke/dired-cwd ()
     (interactive)
     (dired default-directory))
 
@@ -409,7 +406,7 @@
   :config
   (defun luke/format-rust ()
     (interactive)
-    (shell-command "cargo-fmt"))
+    (shell-command (concat  "~/.cargo/bin/rustfmt " buffer-file-name)))
   )
 
 ;; Recentf
