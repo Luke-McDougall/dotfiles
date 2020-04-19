@@ -1,3 +1,22 @@
+;; Doom emacs, which I stole this from, has it in both early-init.el and
+;; init.el. I don't know if that is a mistake or if it's necessary but
+;; putting it here too doesn't seem to negatively effect start up time
+;; so I may as well just do it.
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; Some more doom-emacs startup time optimizations
+
+;; Concatenate all autoloads files into one giant file
+(setq-default package-quickstart t)
+
+;; file-name-handler-alist is most likely not necessary during startup.
+;; Disable it until after emacs starts.
+(defvar luke/file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq file-name-handler-alist luke/file-name-handler-alist)))
+
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 (require 'package)
@@ -214,7 +233,7 @@
 )
 
 (use-package man
-  :init
+  :config
   (defun man-mode-keybindings ()
     (define-key evil-normal-state-local-map (kbd "\r")  'man-follow)
     (define-key evil-normal-state-local-map (kbd "p")   'Man-next-section)
@@ -234,7 +253,11 @@
 
 (use-package vc
   :config
-  (setq vc-follow-symlinks t))
+  (setq vc-follow-symlinks t)
+  :bind (:map evil-normal-state-map
+              ("SPC v p" . vc-push)
+              )
+  )
 
 (use-package emacs
   :config
