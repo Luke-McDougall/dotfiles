@@ -147,7 +147,7 @@
 	      ("C-j"       . evil-forward-paragraph)
 	      ("C-k"       . evil-backward-paragraph)
 
-              ;; prefix-w for 'window' commands
+              ;; Prefix-w for 'window' commands
 	      ("SPC w h"   . evil-window-left)
 	      ("SPC w l"   . evil-window-right)
 	      ("SPC w k"   . evil-window-up)
@@ -157,7 +157,7 @@
 	      ("SPC w q"   . delete-window)
 	      ("SPC w w"   . delete-other-windows)
 
-              ;; prefix-b for 'buffer' commands
+              ;; Prefix-b for 'buffer' commands
 	      ("SPC b s"   . switch-to-buffer)
 	      ("SPC b o"   . switch-to-buffer-other-window)
 	      ("SPC b i"   . ibuffer-other-window)
@@ -187,18 +187,21 @@
               ;; Prefix-h for 'help' commands
               ("SPC h"     . describe-symbol-at-point)
 
-              ;; prefix-e for 'error' commands
+              ;; Prefix-e for 'error' commands
               ("SPC e n"   . next-error)
 	      ("SPC e p"   . previous-error)
 
-              ;; prefix-j for 'jump' commands
+              ;; Prefix-j for 'jump' commands
               ("SPC j n"   . evil-jump-forward)
               ("SPC j p"   . evil-jump-backward)
 
-              ;; prefix-d for 'dired' commands
+              ;; Prefix-d for 'dired' commands
               ("SPC d d"   . luke/dired-cwd)
               ("SPC d o"   . dired-other-window)
               ("SPC D"     . dired)
+
+              ;; Prefix-s for 'shell' commands
+              ("SPC s a"   . async-shell-command)
 
               ;; Miscellaneous
 	      ("SPC SPC"   . find-file)
@@ -370,6 +373,11 @@
   (setq rg-group-result t))
 
 (use-package dired
+  :init
+  (defun luke/dired-cwd ()
+    (interactive)
+    (dired default-directory))
+
   :config
   (defun dired-buffer-map ()
     "Setup bindings for dired buffer."
@@ -379,11 +387,7 @@
     (define-key evil-normal-state-local-map "r" 'dired-do-rename)
     (define-key evil-normal-state-local-map (kbd "\r") 'dired-find-file))
 
-  (defun luke/dired-cwd ()
-    (interactive)
-    (dired default-directory))
 
-  :config
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq dired-delete-by-moving-to-trash t)
@@ -546,10 +550,9 @@ instead"
 
   :bind (:map icomplete-minibuffer-map
               ("<right>"     . icomplete-forward-completions)
-              ("J"           . icomplete-forward-completions)
               ("<left>"      . icomplete-backward-completions)
-              ("K"           . icomplete-backward-completions)
               ("C-f"         . luke/icomplete-toggle-basic)
+              ("C-SPC"       . icomplete-vertical-toggle)
               ("<backspace>" . icomplete-fido-backward-updir)
               ("<tab>"       . icomplete-forward-completions)
               ("<M-return>"  . icomplete-force-complete-and-exit)
