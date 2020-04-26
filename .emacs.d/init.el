@@ -167,22 +167,22 @@
 	      ("SPC b x"   . save-and-kill-buffer)
 
               ;; Prefix-f for 'find' commands
-	      ("SPC f r"   . icomplete-find-recent-file)
+	      ("SPC f r"   . luke/icomplete-find-recent-file)
 	      ("SPC f o"   . find-file-other-window)
 	      ("SPC f f"   . find-file)
 	      ("SPC f l"   . find-library)
 	      ("SPC f c"   . luke/config)
 	      ("SPC f C"   . luke/config-other-window)
 	      ("SPC f m"   . man)
-	      ("SPC f p"   . icomplete-open-pdf)
+	      ("SPC f p"   . luke/icomplete-open-pdf)
 
               ;; Prefix-o for org commands
-              ("SPC o t"    . org-todo-list)
+              ("SPC o t"   . org-todo-list)
               
               ;; Prefix-r for ripgrep or regex commands
-              ("SPC r r"    . rg)
-              ("SPC r f"    . luke/rg-search-file)
-              ("SPC r d"    . luke/rg-search-directory)
+              ("SPC r r"   . rg)
+              ("SPC r f"   . luke/rg-search-file)
+              ("SPC r d"   . luke/rg-search-directory)
 
               ;; Prefix-h for 'help' commands
               ("SPC h"     . describe-symbol-at-point)
@@ -523,7 +523,7 @@ instead"
   (add-to-list 'load-path "~/.emacs.d/icomplete-vertical")
   (require 'icomplete-vertical)
 
-  (defun icomplete-open-pdf ()
+  (defun luke/icomplete-open-pdf ()
     "Open a pdf file present in ~/PDF with mupdf"
     (interactive)
     (icomplete-vertical-toggle)
@@ -535,7 +535,7 @@ instead"
     (icomplete-vertical-toggle)
     )
 
-  (defun icomplete-find-recent-file ()
+  (defun luke/icomplete-find-recent-file ()
     (interactive)
     (let ((file
            (completing-read "Choose recent file: "
