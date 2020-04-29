@@ -60,6 +60,23 @@
   (forward-char 1)
 )
 
+(defun eval-region-replace (beg end)
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list nil nil)))
+  (save-excursion
+    (setq result (eval (read (buffer-substring-no-properties beg end)))))
+  (kill-region beg end)
+  (setq result-text
+        (cond
+         ((stringp result) result)
+         ((numberp result) (number-to-string result))
+         ("Error: Expression must evaluate to a string or a number"))
+        )
+  (insert result-text)
+)
+
 (defun save-and-kill-buffer ()
   "Pretty self explanatory dude."
   (interactive)
@@ -216,6 +233,7 @@
               :map evil-visual-state-map
 	      ("H"         . evil-first-non-blank-of-visual-line)
 	      ("L"         . evil-end-of-visual-line)
+	      ("SPC e"     . eval-region-replace)
           )
 )
 
