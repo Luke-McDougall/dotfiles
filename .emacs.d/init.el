@@ -60,11 +60,11 @@
   (forward-char 1)
 )
 
+;; This function should only be called from visual mode
+;; i.e. use-region-p should always be true.
 (defun eval-region-replace (beg end)
   (interactive
-   (if (use-region-p)
-       (list (region-beginning) (region-end))
-     (list nil nil)))
+       (list (region-beginning) (region-end)))
   (save-excursion
     (setq result (eval (read (buffer-substring-no-properties beg end)))))
   (kill-region beg end)
@@ -72,8 +72,7 @@
         (cond
          ((stringp result) result)
          ((numberp result) (number-to-string result))
-         ("Error: Expression must evaluate to a string or a number"))
-        )
+         ("Error: Expression must evaluate to a string or a number")))
   (insert result-text)
 )
 
@@ -236,6 +235,11 @@
 	      ("SPC e"     . eval-region-replace)
           )
 )
+
+(use-package evil-commentary
+  :ensure t
+  :config
+  (evil-commentary-mode))
 
 (use-package evil-snipe
   :ensure t
