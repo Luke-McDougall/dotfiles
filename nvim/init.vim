@@ -6,6 +6,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
+Plug 'dense-analysis/ale'
 call plug#end()
 
 " Colourscheme
@@ -49,3 +50,4 @@ set encoding=utf-8
 :nmap <Leader>bs :Buffers<CR>
 :nmap <Leader>bq :bd<CR>
 :nmap <Leader>l :BLines<CR>
+:nmap gd :ALEGoToDefinition<CR>

@@ -160,8 +160,8 @@
 	      ("L"         . evil-end-of-visual-line)
               ("zk"        . evil-scroll-line-to-top)
               ("zj"        . evil-scroll-line-to-bottom)
-	      ("C-j"       . evil-forward-paragraph)
-	      ("C-k"       . evil-backward-paragraph)
+	      ("C-j"       . evil-scroll-down)
+	      ("C-k"       . evil-scroll-up)
 
               ;; Prefix-w for 'window' commands
 	      ("SPC w h"   . evil-window-left)
@@ -518,8 +518,8 @@ instead"
     (define-key evil-normal-state-local-map (kbd "j")        'next-line)
     (define-key evil-normal-state-local-map (kbd "k")        'previous-line)
     (define-key evil-normal-state-local-map (kbd "h")        'previous-completion)
-    (define-key evil-normal-state-local-map (kbd "<return>") 'choose-completion)
-    (define-key evil-normal-state-local-map (kbd "l")        'next-completion))
+    (define-key evil-normal-state-local-map (kbd "l")        'next-completion)
+    (define-key evil-normal-state-local-map (kbd "<return>") 'choose-completion))
 
   :bind (:map completion-list-mode-map
               ("M-v" . focus-minibuffer))
@@ -550,10 +550,10 @@ instead"
     (interactive)
     (icomplete-vertical-toggle)
     (let* ((file-list (directory-files-recursively "~/PDF" "" nil))
-           (files (mapcar 'abbreviate-file-name file-list))
+           (files (mapcar 'file-name-nondirectory file-list))
            (file (completing-read "Open PDF: " files)))
       (when file
-        (start-process-shell-command "*pdf*" nil (concat "mupdf " file))))
+        (start-process-shell-command "*pdf*" nil (concat "mupdf ~/PDF/" file))))
     (icomplete-vertical-toggle)
     )
 
@@ -565,7 +565,7 @@ instead"
       (when file
 	(find-file file))))
 
-  (defun luke/icomplete-toggle-basic ()
+  (defun luke/icomplete-set-basic ()
     "Change to basic completion for current icomplete minibuffer"
     (interactive)
     (setq-local completion-styles '(basic)))
@@ -573,7 +573,7 @@ instead"
   :bind (:map icomplete-minibuffer-map
               ("<right>"     . icomplete-forward-completions)
               ("<left>"      . icomplete-backward-completions)
-              ("C-f"         . luke/icomplete-toggle-basic)
+              ("C-f"         . luke/icomplete-set-basic)
               ("C-SPC"       . icomplete-vertical-toggle)
               ("<backspace>" . icomplete-fido-backward-updir)
               ("<tab>"       . icomplete-forward-completions)
