@@ -246,16 +246,6 @@
   :config
   (evil-snipe-mode +1))
 
-(use-package window
-  :init
-  (setq display-buffer-alist
-        '(("\\*Ibuffer*"
-           (display-buffer-in-side-window)
-           (window-height . 0.2)
-           (side . bottom)
-           (slot . 0))))
-  :bind (("<f8>" . window-toggle-side-windows))
-)
 
 (use-package man
   :config
@@ -278,11 +268,7 @@
 
 (use-package vc
   :config
-  (setq vc-follow-symlinks t)
-  :bind (:map evil-normal-state-map
-              ("SPC v p" . vc-push)
-              )
-  )
+  (setq vc-follow-symlinks t))
 
 (use-package emacs
   :config
@@ -525,6 +511,9 @@ instead"
               ("M-v" . focus-minibuffer))
   :hook (completion-list-mode . completion-list-buffer-bindings))
 
+(use-package icomplete-vertical
+  :ensure t)
+
 (use-package icomplete
   :demand
   :after minibuffer
@@ -542,19 +531,16 @@ instead"
   (fido-mode -1)
   (icomplete-mode 1)
 
-  (add-to-list 'load-path "~/.emacs.d/icomplete-vertical")
-  (require 'icomplete-vertical)
-
   (defun luke/icomplete-open-pdf ()
     "Open a pdf file present in ~/PDF with mupdf"
     (interactive)
-    (icomplete-vertical-toggle)
-    (let* ((file-list (directory-files-recursively "~/PDF" "" nil))
-           (files (mapcar 'file-name-nondirectory file-list))
-           (file (completing-read "Open PDF: " files)))
-      (when file
-        (start-process-shell-command "*pdf*" nil (concat "mupdf ~/PDF/" file))))
-    (icomplete-vertical-toggle)
+    (icomplete-vertical-do ()
+      (let* ((file-list (directory-files-recursively "~/PDF" "" nil))
+             (files (mapcar 'file-name-nondirectory file-list))
+             (file (completing-read "Open PDF: " files)))
+        (when file
+          (start-process-shell-command "*pdf*" nil (concat "mupdf ~/PDF/" file))))
+      )
     )
 
   (defun luke/icomplete-find-recent-file ()
