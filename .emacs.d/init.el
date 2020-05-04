@@ -62,7 +62,7 @@
 
 ;; This function should only be called from visual mode
 ;; i.e. use-region-p should always be true.
-(defun eval-region-replace (beg end)
+(defun luke/eval-region-replace (beg end)
   (interactive
        (list (region-beginning) (region-end)))
   (save-excursion
@@ -76,19 +76,19 @@
   (insert result-text)
 )
 
-(defun save-and-kill-buffer ()
+(defun luke/save-and-kill-buffer ()
   "Pretty self explanatory dude."
   (interactive)
   (save-buffer)
   (kill-buffer)
 )
 
-(defun kill-all-buffers ()
+(defun luke/kill-all-buffers ()
   "It kills all the buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
-(defun open-terminal-in-default-directory ()
+(defun luke/open-terminal-in-default-directory ()
   "Opens a terminal (alacritty) in the default-directory of the current buffer."
   (interactive)
   (start-process "*terminal*" nil "alacritty" "--working-directory" default-directory)
@@ -179,8 +179,8 @@
 	      ("SPC b i"   . ibuffer-other-window)
 	      ("SPC b e"   . eval-buffer)
 	      ("SPC b q"   . kill-this-buffer)
-	      ("SPC b k a" . kill-all-buffers)
-	      ("SPC b x"   . save-and-kill-buffer)
+	      ("SPC b k a" . luke/kill-all-buffers)
+	      ("SPC b x"   . luke/save-and-kill-buffer)
 
               ;; Prefix-f for 'find' commands
 	      ("SPC f r"   . luke/icomplete-find-recent-file)
@@ -221,7 +221,7 @@
 
               ;; Miscellaneous
 	      ("SPC SPC"   . find-file)
-	      ("SPC \r"    . open-terminal-in-default-directory)
+	      ("SPC \r"    . luke/open-terminal-in-default-directory)
               ("<f5>"      . compile)
 	      (";"         . evil-ex)
 
@@ -232,7 +232,7 @@
               :map evil-visual-state-map
 	      ("H"         . evil-first-non-blank-of-visual-line)
 	      ("L"         . evil-end-of-visual-line)
-	      ("SPC e"     . eval-region-replace)
+	      ("SPC e"     . luke/eval-region-replace)
           )
 )
 
