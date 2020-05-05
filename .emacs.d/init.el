@@ -46,7 +46,7 @@
 
   (load custom-file))
 
-(defun jump-to-closing-paren ()
+(defun luke/jump-to-closing-paren ()
   "Pretty self explanatory dude."
   (interactive)
   (while (not (or (eq ?\) (char-after))
@@ -122,12 +122,12 @@
 
   :config 
   ;; Center point after any jumps
-  (defun my-center-line (&rest _)
+  (defun luke/center-line (&rest _)
     (evil-scroll-line-to-center nil))
 
-  (advice-add 'evil-ex-search-next :after #'my-center-line)
-  (advice-add 'evil-jump-forward :after #'my-center-line)
-  (advice-add 'evil-jump-backward :after #'my-center-line)
+  (advice-add 'evil-ex-search-next :after #'luke/center-line)
+  (advice-add 'evil-jump-forward :after #'luke/center-line)
+  (advice-add 'evil-jump-backward :after #'luke/center-line)
 
   ;; Get rid of search highlighting after 'j' is pressed
   (defun luke/nohighlight (&rest _)
@@ -136,12 +136,12 @@
   (advice-add 'evil-next-line :after #'luke/nohighlight)
   
   ;; It annoys me that I have to switch to the rg buffer manually
-  (defun switch-to-window-rg (&rest _)
+  (defun luke/switch-to-window-rg (&rest _)
     (select-window (get-buffer-window "*rg*")))
 
-  (advice-add 'rg :after #'switch-to-window-rg)
-  (advice-add 'luke/rg-search-file :after #'switch-to-window-rg)
-  (advice-add 'luke/rg-search-directory :after #'switch-to-window-rg)
+  (advice-add 'rg :after #'luke/switch-to-window-rg)
+  (advice-add 'luke/rg-search-file :after #'luke/switch-to-window-rg)
+  (advice-add 'luke/rg-search-directory :after #'luke/switch-to-window-rg)
   (defun luke/config ()
     (interactive)
     (find-file "~/.emacs.d/init.el"))
@@ -226,7 +226,7 @@
 	      (";"         . evil-ex)
 
 	      :map evil-insert-state-map
-	      ("C-j"       . jump-to-closing-paren)
+	      ("C-j"       . luke/jump-to-closing-paren)
 	      ("C-k"       . evil-normal-state)
 
               :map evil-visual-state-map
