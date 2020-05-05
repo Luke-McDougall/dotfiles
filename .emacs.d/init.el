@@ -246,7 +246,6 @@
   :config
   (evil-snipe-mode +1))
 
-
 (use-package man
   :config
   (defun man-mode-keybindings ()
@@ -534,22 +533,23 @@ instead"
   (defun luke/icomplete-open-pdf ()
     "Open a pdf file present in ~/PDF with mupdf"
     (interactive)
-    (icomplete-vertical-do ()
-      (let* ((file-list (directory-files-recursively "~/PDF" "" nil))
-             (files (mapcar 'file-name-nondirectory file-list))
-             (file (completing-read "Open PDF: " files)))
-        (when file
-          (start-process-shell-command "*pdf*" nil (concat "mupdf ~/PDF/" file))))
-      )
+    (let* ((file-list (directory-files-recursively "~/PDF" "" nil))
+           (files (mapcar 'file-name-nondirectory file-list))
+           (file (completing-read "Open PDF: " files)))
+      (when file
+        (start-process-shell-command "*pdf*" nil (concat "mupdf ~/PDF/" file))))
     )
 
   (defun luke/icomplete-find-recent-file ()
     (interactive)
-    (let ((file
-           (completing-read "Choose recent file: "
-                                (mapcar 'abbreviate-file-name recentf-list) nil t)))
-      (when file
-	(find-file file))))
+    (icomplete-vertical-do ()
+      (let ((file
+             (completing-read "Choose recent file: "
+                              (mapcar 'abbreviate-file-name recentf-list) nil t)))
+        (when file
+          (find-file file)))
+      )
+    )
 
   (defun luke/icomplete-set-basic ()
     "Change to basic completion for current icomplete minibuffer"
