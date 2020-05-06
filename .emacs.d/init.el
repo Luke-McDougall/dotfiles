@@ -176,7 +176,8 @@
               ;; Prefix-b for 'buffer' commands
 	      ("SPC b s"   . switch-to-buffer)
 	      ("SPC b o"   . switch-to-buffer-other-window)
-	      ("SPC b i"   . ibuffer-other-window)
+	      ("SPC b i"   . ibuffer)
+	      ("SPC b I"   . ibuffer-other-window)
 	      ("SPC b e"   . eval-buffer)
 	      ("SPC b q"   . kill-this-buffer)
 	      ("SPC b k a" . luke/kill-all-buffers)
