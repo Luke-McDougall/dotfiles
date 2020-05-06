@@ -426,14 +426,17 @@
   (setq-default c-basic-offset 4)
   (setq-default c-default-style "k&r")
 
-  (defun java-custom-indent-settings ()
-    "My preferred settings for indentation of java code."
+  (defun luke/java-settings ()
+    ;; Indent settings
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'case-label '+)
     (c-set-offset 'inline-open 0)
-    (c-set-offset 'statement-case-intro 0))
+    (c-set-offset 'statement-case-intro 0)
 
-  :hook ((java-mode . java-custom-indent-settings))
+    ;; Other
+    (subword-mode 1))
+
+  :hook ((java-mode . luke/java-settings))
   )
 
 (use-package rust-mode

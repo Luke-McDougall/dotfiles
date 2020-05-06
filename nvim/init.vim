@@ -37,6 +37,8 @@ set encoding=utf-8
 :let mapleader = "\<Space>"
 :nmap zk zt
 :nmap zj zb
+:nmap <C-j> <C-d>
+:nmap <C-k> <C-u>
 :nnoremap ; :
 :inoremap <C-j> <Esc>/[)}"'\]>]<CR>:nohl<CR>a
 :nmap <Leader>wv <C-w>v
@@ -50,4 +52,3 @@ set encoding=utf-8
 :nmap <Leader>bs :Buffers<CR>
 :nmap <Leader>bq :bd<CR>
 :nmap <Leader>l :BLines<CR>
-:nmap gd :ALEGoToDefinition<CR>
