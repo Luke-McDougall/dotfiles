@@ -192,6 +192,8 @@
 	      ("SPC f C"   . luke/config-other-window)
 	      ("SPC f m"   . man)
 	      ("SPC f p"   . luke/icomplete-open-pdf)
+	      ("SPC f d"   . dired)
+	      ("SPC f D"   . dired-other-window)
 
               ;; Prefix-o for org commands
               ("SPC o t"   . org-todo-list)
@@ -214,8 +216,6 @@
 
               ;; Prefix-d for 'dired' commands
               ("SPC d d"   . dired-jump)
-              ("SPC d o"   . dired-other-window)
-              ("SPC D"     . dired)
 
               ;; Prefix-s for 'shell' commands
               ("SPC s a"   . async-shell-command)
