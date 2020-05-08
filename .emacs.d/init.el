@@ -213,7 +213,7 @@
               ("SPC j p"   . evil-jump-backward)
 
               ;; Prefix-d for 'dired' commands
-              ("SPC d d"   . luke/dired-cwd)
+              ("SPC d d"   . dired-jump)
               ("SPC d o"   . dired-other-window)
               ("SPC D"     . dired)
 
@@ -381,11 +381,6 @@
   (setq rg-group-result t))
 
 (use-package dired
-  :init
-  (defun luke/dired-cwd ()
-    (interactive)
-    (dired default-directory))
-
   :config
   (defun dired-buffer-map ()
     "Setup bindings for dired buffer."
@@ -410,6 +405,8 @@
   :hook ((dired-mode . dired-hide-details-mode)
 	 (dired-mode . dired-buffer-map))
 )
+
+(use-package dired-x)
 
 (use-package async
   :ensure t)
