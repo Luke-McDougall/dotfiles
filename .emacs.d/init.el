@@ -388,6 +388,11 @@
     (define-key evil-normal-state-local-map "q" 'kill-this-buffer)
     (define-key evil-normal-state-local-map "y" 'dired-do-copy)
     (define-key evil-normal-state-local-map "r" 'dired-do-rename)
+    (define-key evil-normal-state-local-map "v" 'dired-do-kill-lines)
+    (define-key evil-normal-state-local-map "\C-g" 'revert-buffer)
+    (define-key evil-normal-state-local-map "i" 'dired-maybe-insert-subdir)
+    (define-key evil-normal-state-local-map "\C-j" 'dired-next-subdir)
+    (define-key evil-normal-state-local-map "\C-k" 'dired-prev-subdir)
     (define-key evil-normal-state-local-map (kbd "\r") 'dired-find-file))
 
 
@@ -398,8 +403,11 @@
   (setq dired-dwim-target t)
 
   :bind (:map dired-mode-map
-              ("SPC" . nil)  ; Don't intercept leader key
-              ("n"   . nil)  ; Evil mode next/previous match keys
+              ;; Keys I don't want to be intercept by dired-mode-map
+              ("SPC" . nil)
+              ("g"   . nil)
+              ("G"   . nil)
+              ("n"   . nil)
               ("N"   . nil))
 
   :hook ((dired-mode . dired-hide-details-mode)
@@ -625,6 +633,10 @@ instead"
   :ensure t)
 
 (add-hook 'after-init-hook 'global-hl-line-mode)
+(add-hook 'after-init-hook
+          (lambda ()
+            (blink-cursor-mode 0)))
+
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
