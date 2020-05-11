@@ -194,12 +194,14 @@
 	      ("SPC f p"   . luke/icomplete-open-pdf)
 	      ("SPC f d"   . dired)
 	      ("SPC f D"   . dired-other-window)
+	      ("SPC f p"   . luke/project-find-file)
 
               ;; Prefix-o for org commands
               ("SPC o t"   . org-todo-list)
               
               ;; Prefix-r for ripgrep or regex commands
               ("SPC r r"   . rg)
+              ("SPC r p"   . rg-project)
               ("SPC r f"   . luke/rg-search-file)
               ("SPC r d"   . luke/rg-search-directory)
 
@@ -574,6 +576,16 @@ instead"
               ("<tab>"       . icomplete-forward-completions)
               ("<M-return>"  . icomplete-force-complete-and-exit)
               ("<return>"    . icomplete-fido-ret))
+  )
+
+(use-package project
+  :after (minibuffer icomplete icomplete-vertical)
+  :config
+  (defun luke/project-find-file ()
+    "I probably would've written something like this"
+    (interactive)
+    (icomplete-vertical-do ()
+      (project-find-file)))
   )
 
 (use-package savehist
