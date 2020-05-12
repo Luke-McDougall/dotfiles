@@ -598,6 +598,13 @@ instead"
   (setq savehist-save-minibuffer-history t)
   (savehist-mode 1))
 
+(use-package amx
+  :ensure t
+  :init
+  (setq amx-ignored-command-matchers nil)
+  (setq amx-show-key-bindings nil)
+  (amx-mode 1))
+
 ;; Paren zone
 (electric-pair-mode 1)
 (setq-default show-paren-delay 0)
