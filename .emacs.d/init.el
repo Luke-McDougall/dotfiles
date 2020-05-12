@@ -194,7 +194,9 @@
 	      ("SPC f p"   . luke/icomplete-open-pdf)
 	      ("SPC f d"   . dired)
 	      ("SPC f D"   . dired-other-window)
-	      ("SPC f p"   . luke/project-find-file)
+
+              ;; Prefix-p for project commands
+	      ("SPC p f"   . luke/project-find-file)
 
               ;; Prefix-o for org commands
               ("SPC o t"   . org-todo-list)
@@ -653,11 +655,13 @@ instead"
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 ;; Clean Screen
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
+;; (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
+(add-to-list 'default-frame-alist '(font . "Hack-11"))
 (setq inhibit-startup-screen t)
 (setq scroll-conservatively 100)
 (global-display-line-numbers-mode t)
 (setq-default display-line-numbers-type 'relative)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Turn the garbage collector back on
 (add-to-list 'load-path "~/.emacs.d/gcmh")
