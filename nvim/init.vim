@@ -6,7 +6,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
-Plug 'dense-analysis/ale'
+Plug 'itchyny/lightline.vim'
 call plug#end()
 
 " Colourscheme
