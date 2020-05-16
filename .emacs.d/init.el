@@ -1,7 +1,6 @@
-;; Doom emacs, which I stole this from, has it in both early-init.el and
-;; init.el. I don't know if that is a mistake or if it's necessary but
-;; putting it here too doesn't seem to negatively effect start up time
-;; so I may as well just do it.
+;; Doom emacs, which I stole this from, has it in both early-init.el and init.el.
+;; I don't know if that is a mistake or if it's necessary but putting it here too
+;; doesn't seem to negatively effect start up time so I may as well just do it.
 (setq gc-cons-threshold most-positive-fixnum)
 
 ;; Some more doom-emacs startup time optimizations
@@ -9,8 +8,8 @@
 ;; Concatenate all autoloads files into one giant file
 (setq-default package-quickstart t)
 
-;; file-name-handler-alist is most likely not necessary during startup.
-;; Disable it until after emacs starts.
+;; file-name-handler-alist is most likely not necessary during startup. Disable
+;; it until after emacs starts.
 (defvar luke/file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'emacs-startup-hook
@@ -60,8 +59,8 @@
   (forward-char 1)
 )
 
-;; This function should only be called from visual mode
-;; i.e. use-region-p should always be true.
+;; This function should only be called from visual mode i.e. use-region-p should
+;; always be true.
 (defun luke/eval-region-replace (beg end)
   (interactive
        (list (region-beginning) (region-end)))
@@ -300,7 +299,7 @@
                   "  "
                   mode-name
                   "  "
-                  "%I"
+                  "%c | %I"
                   ;;display-time-string
                   mode-line-end-spaces))
 )
@@ -662,7 +661,6 @@ instead"
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 ;; Clean Screen
-;; (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
 (add-to-list 'default-frame-alist '(font . "Hack-11"))
 (setq inhibit-startup-screen t)
 (setq scroll-conservatively 100)
