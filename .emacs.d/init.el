@@ -221,6 +221,8 @@
               ("SPC d d"   . dired-jump)
 
               ;; Prefix-s for 'shell' commands
+              ;; Note check that any commands added here is not duplicated in org
+              ;; mode section. In org mode those bindings will intercept any here.
               ("SPC s a"   . async-shell-command)
 
               ;; Miscellaneous
@@ -318,7 +320,8 @@
   (defun org-buffer-map ()
     (define-key evil-insert-state-local-map (kbd "M-l")     'org-metaright)
     (define-key evil-insert-state-local-map (kbd "M-h")     'org-metaleft)
-    (define-key evil-insert-state-local-map (kbd "M-s")     'org-insert-structure-template)
+    (define-key evil-normal-state-local-map (kbd "SPC s i") 'org-insert-structure-template)
+    (define-key evil-normal-state-local-map (kbd "SPC s e") 'org-edit-special)
     (define-key evil-normal-state-local-map (kbd "C-u")     'outline-up-heading)
     (define-key evil-normal-state-local-map (kbd "C-j")     'org-next-visible-heading)
     (define-key evil-normal-state-local-map (kbd "C-k")     'org-previous-visible-heading)
@@ -329,7 +332,12 @@
     (auto-fill-mode 1)
     (flyspell-mode 1))
 
-  :hook ((org-mode . org-buffer-map))
+  (defun org-src-buffer-map ()
+    (define-key evil-normal-state-local-map (kbd "SPC s e") 'org-edit-src-exit)
+    )
+
+  :hook ((org-mode     . org-buffer-map)
+         (org-src-mode . org-src-buffer-map))
 )
 
 (use-package org-agenda
