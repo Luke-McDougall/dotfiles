@@ -12,6 +12,7 @@ call plug#end()
 " Colourscheme
 let base16colorspace=256
 colorscheme base16-atelier-dune
+hi Normal ctermbg=none
 
 " Normal defaults
 set number relativenumber
