@@ -219,6 +219,7 @@
 
               ;; Prefix-d for 'dired' commands
               ("SPC d d"   . dired-jump)
+              ("SPC d o"   . dired-jump-other-window)
 
               ;; Prefix-s for 'shell' commands
               ;; Note check that any commands added here is not duplicated in org
