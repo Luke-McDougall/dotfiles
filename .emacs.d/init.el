@@ -5,9 +5,6 @@
 
 ;; Some more doom-emacs startup time optimizations
 
-;; Concatenate all autoloads files into one giant file
-(setq-default package-quickstart t)
-
 ;; file-name-handler-alist is most likely not necessary during startup. Disable
 ;; it until after emacs starts.
 (defvar luke/file-name-handler-alist file-name-handler-alist)

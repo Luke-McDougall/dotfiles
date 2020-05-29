@@ -8,6 +8,12 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
+;; This is done in init.el
+(setq package-enable-at-startup nil)
+
+;; Concatenate all autoloads files into one giant file
+(setq-default package-quickstart t)
+
 ;; Resizing the emacs frame can be expensive part of changing font.
 ;; Inhibiting this can half startup time.
 (setq frame-inhibit-implied-resize t)
