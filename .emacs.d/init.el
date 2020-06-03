@@ -117,6 +117,9 @@
                 woman-mode))
 
   :config 
+  ;; Make wdired start in normal mode instead of insert mode
+  (evil-set-initial-state 'wdired-mode 'normal)
+
   ;; Center point after any jumps
   (defun luke/center-line (&rest _)
     (evil-scroll-line-to-center nil))
@@ -146,7 +149,6 @@
     (interactive)
     (find-file-other-window "~/.emacs.d/init.el"))
 
-  (evil-ex-define-cmd "config" 'luke/config)
   (evil-ex-define-cmd "format" 'luke/format-rust)
 
   (evil-mode 1)
@@ -181,6 +183,7 @@
 
               ;; Prefix-f for 'find' commands
 	      ("SPC f r"   . luke/icomplete-find-recent-file)
+	      ("SPC f R"   . luke/icomplete-find-recent-file-other-window)
 	      ("SPC f o"   . find-file-other-window)
 	      ("SPC f f"   . find-file)
 	      ("SPC f l"   . find-library)
@@ -217,9 +220,11 @@
               ;; Prefix-d for 'dired' commands
               ("SPC d d"   . dired-jump)
               ("SPC d o"   . dired-jump-other-window)
+              ("SPC d e"   . wdired-change-to-wdired-mode)
+              ("SPC d w"   . wdired-finish-edit)
 
               ;; Prefix-s for 'shell' commands
-              ;; Note check that any commands added here is not duplicated in org
+              ;; Note check that any command added here is not duplicated in org
               ;; mode section. In org mode those bindings will intercept any here.
               ("SPC s a"   . async-shell-command)
 
@@ -287,6 +292,8 @@
                     ((eq evil-state 'emacs)  "EMACS")
                     ((eq evil-state 'normal) "NORMAL")
                     ((eq evil-state 'visual) "VISUAL")
+                    ((eq evil-state 'operator) "OPERATOR")
+                    ((eq evil-state 'replace) "REPLACE")
                     ((eq evil-state 'insert) "INSERT")))
                   "] ["
                   (:eval
@@ -402,7 +409,8 @@
     (define-key evil-normal-state-local-map "i" 'dired-maybe-insert-subdir)
     (define-key evil-normal-state-local-map "\C-j" 'dired-next-subdir)
     (define-key evil-normal-state-local-map "\C-k" 'dired-prev-subdir)
-    (define-key evil-normal-state-local-map (kbd "\r") 'dired-find-file))
+    (define-key evil-normal-state-local-map (kbd "\r") 'dired-find-file)
+    (define-key evil-normal-state-local-map (kbd "M-\r") 'dired-find-file-other-window))
 
 
   (setq dired-recursive-copies 'always)
@@ -422,6 +430,12 @@
   :hook ((dired-mode . dired-hide-details-mode)
 	 (dired-mode . dired-buffer-map))
 )
+
+(use-package wdired
+  :after dired
+  :config
+  (setq wdired-allow-to-change-permissions t)
+  (setq wdired-create-parent-directories t))
 
 (use-package dired-x)
 
@@ -560,13 +574,22 @@ instead"
 
   (defun luke/icomplete-find-recent-file ()
     (interactive)
-    (icomplete-vertical-do ()
-      (let ((file
+    (let ((file
+           (icomplete-vertical-do ()
              (completing-read "Choose recent file: "
-                              (mapcar 'abbreviate-file-name recentf-list) nil t)))
-        (when file
-          (find-file file)))
-      )
+                              (mapcar 'abbreviate-file-name recentf-list) nil t))))
+      (when file
+        (find-file file)))
+    )
+
+  (defun luke/icomplete-find-recent-file-other-window ()
+    (interactive)
+    (let ((file
+           (icomplete-vertical-do ()
+             (completing-read "Choose recent file: "
+                              (mapcar 'abbreviate-file-name recentf-list) nil t))))
+      (when file
+        (find-file-other-window file)))
     )
 
   (defun luke/icomplete-set-basic ()
@@ -584,6 +607,23 @@ instead"
               ("<M-return>"  . icomplete-force-complete-and-exit)
               ("<return>"    . icomplete-fido-ret))
   )
+
+(use-package pdf-tools
+  :init
+  (pdf-loader-install)
+  :config
+  (defun luke/pdf-view-mode-hook ()
+    ;; Keybindings
+    (define-key evil-normal-state-local-map "j"             'pdf-view-next-line-or-next-page)
+    (define-key evil-normal-state-local-map "k"             'pdf-view-previous-line-or-previous-page)
+    (define-key evil-normal-state-local-map "g"             'pdf-view-first-page)
+    (define-key evil-normal-state-local-map "G"             'pdf-view-last-page)
+    (define-key evil-normal-state-local-map (kbd "C-j")     'pdf-view-next-page-command)
+    (define-key evil-normal-state-local-map (kbd "C-k")     'pdf-view-previous-page-command)
+    (define-key evil-normal-state-local-map (kbd "SPC g l") 'pdf-view-goto-label))
+
+  :hook (pdf-view-mode . luke/pdf-view-mode-hook)
+    )
 
 (use-package project
   :after (minibuffer icomplete icomplete-vertical)
