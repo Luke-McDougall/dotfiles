@@ -43,7 +43,7 @@
   (load custom-file))
 
 (defun luke/jump-to-closing-paren ()
-  "Pretty self explanatory dude."
+  "Moves point to be after the next closing paren in the buffer"
   (interactive)
   (while (not (or (eq ?\) (char-after))
 		  (eq ?\] (char-after))
@@ -72,15 +72,21 @@
   (insert result-text)
 )
 
+;; Function taken from here `https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el'
+(defun luke/switch-to-last-buffer ()
+  "Switch to last open buffer in current window"
+  (interactive)
+  (if (window-dedicated-p)
+      (message "Window is dedicated to its buffer")
+    (switch-to-buffer (other-buffer (current-buffer) 1))))
+
 (defun luke/save-and-kill-buffer ()
-  "Pretty self explanatory dude."
   (interactive)
   (save-buffer)
   (kill-buffer)
 )
 
 (defun luke/kill-all-buffers ()
-  "It kills all the buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
@@ -141,6 +147,7 @@
   (advice-add 'rg :after #'luke/switch-to-window-rg)
   (advice-add 'luke/rg-search-file :after #'luke/switch-to-window-rg)
   (advice-add 'luke/rg-search-directory :after #'luke/switch-to-window-rg)
+
   (defun luke/config ()
     (interactive)
     (find-file "~/.emacs.d/init.el"))
@@ -229,7 +236,7 @@
               ("SPC s a"   . async-shell-command)
 
               ;; Miscellaneous
-	      ("SPC SPC"   . find-file)
+	      ("SPC SPC"   . luke/switch-to-last-buffer)
 	      ("SPC \r"    . luke/open-terminal-in-default-directory)
               ("<f5>"      . compile)
 	      (";"         . evil-ex)
@@ -272,6 +279,63 @@
     (define-key evil-normal-state-local-map (kbd "m")   'man))
 
   :hook ((Man-mode . man-mode-keybindings))
+  )
+
+(use-package info
+  :config
+  (defun luke/info-mode-settings ()
+    (define-key evil-normal-state-local-map (kbd "g")     'beginning-of-buffer)
+    (define-key evil-normal-state-local-map (kbd "\C-m")  'Info-follow-nearest-node)
+    (define-key evil-normal-state-local-map (kbd "\t")    'Info-next-reference)
+    (define-key evil-normal-state-local-map (kbd "\e\t")  'Info-prev-reference)
+    (define-key evil-normal-state-local-map (kbd "1")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "2")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "3")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "4")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "5")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "6")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "7")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "8")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "9")     'Info-nth-menu-item)
+    (define-key evil-normal-state-local-map (kbd "0")     'undefined)
+    (define-key evil-normal-state-local-map (kbd "?")     'Info-summary)
+    (define-key evil-normal-state-local-map (kbd "]")     'Info-forward-node)
+    (define-key evil-normal-state-local-map (kbd "[")     'Info-backward-node)
+    (define-key evil-normal-state-local-map (kbd "<")     'Info-top-node)
+    (define-key evil-normal-state-local-map (kbd ">")     'Info-final-node)
+    (define-key evil-normal-state-local-map (kbd "d")     'Info-directory)
+    (define-key evil-normal-state-local-map (kbd "G")     'end-of-buffer)
+    (define-key evil-normal-state-local-map (kbd "f")     'Info-follow-reference)
+    (define-key evil-normal-state-local-map (kbd "SPC g") 'Info-goto-node)
+    (define-key evil-normal-state-local-map (kbd "SPC h") 'Info-help)
+
+    (define-key evil-normal-state-local-map (kbd "SPC H") 'describe-mode)
+    (define-key evil-normal-state-local-map (kbd "i")     'Info-index)
+    (define-key evil-normal-state-local-map (kbd "I")     'Info-virtual-index)
+    (define-key evil-normal-state-local-map (kbd "l")     'Info-history-back)
+    (define-key evil-normal-state-local-map (kbd "L")     'Info-history)
+    (define-key evil-normal-state-local-map (kbd "m")     'Info-menu)
+    (define-key evil-normal-state-local-map (kbd "\C-n")  'Info-next)
+    (define-key evil-normal-state-local-map (kbd "\C-p")  'Info-prev)
+    (define-key evil-normal-state-local-map (kbd "q")     'quit-window)
+    (define-key evil-normal-state-local-map (kbd "r")     'Info-history-forward)
+    (define-key evil-normal-state-local-map (kbd "\M-n")  'clone-buffer)
+    (define-key evil-normal-state-local-map (kbd "t")     'Info-top-node)
+    (define-key evil-normal-state-local-map (kbd "T")     'Info-toc)
+    (define-key evil-normal-state-local-map (kbd "u")     'Info-up)
+
+    (define-key evil-normal-state-local-map (kbd ",")     'Info-index-next)
+    (define-key evil-normal-state-local-map (kbd "\177")  'Info-scroll-down)
+    )
+  :bind (:map Info-mode-map
+              ("n" . nil)
+              ("N" . nil)
+              ("b" . nil)
+              ("B" . nil)
+              ("w" . nil)
+              ("e" . nil)
+              )
+  :hook (Info-mode . luke/info-mode-settings)
   )
 
 (use-package vc
@@ -323,6 +387,7 @@
 (use-package org
   :config
   (defun org-buffer-map ()
+    ;; Keybindings
     (define-key evil-insert-state-local-map (kbd "M-l")     'org-metaright)
     (define-key evil-insert-state-local-map (kbd "M-h")     'org-metaleft)
     (define-key evil-normal-state-local-map (kbd "SPC s i") 'org-insert-structure-template)
@@ -333,6 +398,8 @@
     (define-key evil-normal-state-local-map (kbd "SPC s w") 'flyspell-auto-correct-word)
     (define-key xah-math-input-keymap (kbd "S-SPC") nil)
     (define-key xah-math-input-keymap (kbd "<f1>") 'xah-math-input-change-to-symbol)
+
+    ;; Other settings
     (xah-math-input-mode 1)
     (auto-fill-mode 1)
     (flyspell-mode 1))
@@ -620,10 +687,32 @@ instead"
     (define-key evil-normal-state-local-map "G"             'pdf-view-last-page)
     (define-key evil-normal-state-local-map (kbd "C-j")     'pdf-view-next-page-command)
     (define-key evil-normal-state-local-map (kbd "C-k")     'pdf-view-previous-page-command)
-    (define-key evil-normal-state-local-map (kbd "SPC g l") 'pdf-view-goto-label))
+    (define-key evil-normal-state-local-map (kbd "SPC g l") 'pdf-view-goto-label)
+    (define-key evil-normal-state-local-map (kbd "-")       'pdf-view-shrink)
+    (define-key evil-normal-state-local-map (kbd "+")       'pdf-view-enlarge)
+    (define-key evil-normal-state-local-map (kbd "0")       'pdf-view-scale-reset)
+    ;; I think just using pdf-occur is better than isearch in general but I might come back to this
+    ;; (define-key evil-normal-state-local-map (kbd "/")       'isearch-forward)
+    ;; (define-key evil-normal-state-local-map (kbd "n")       'isearch-repeat-forward)
+    ;; (define-key evil-normal-state-local-map (kbd "N")       'isearch-repeat-backward)
+    (define-key evil-normal-state-local-map (kbd "SPC o")   'pdf-occur)
+
+    ;; Other settings
+    (set (make-local-variable 'evil-normal-state-cursor) (list nil))
+    (display-line-numbers-mode))
 
   :hook (pdf-view-mode . luke/pdf-view-mode-hook)
+  )
+
+(use-package pdf-occur
+  :after pdf-tools
+  :config
+  (defun luke/pdf-occur-buffer-map ()
+    (define-key evil-normal-state-local-map (kbd "\r") 'pdf-occur-goto-occurrence)
+    (define-key evil-normal-state-local-map (kbd "o")  'pdf-occur-view-occurrence)
     )
+  :hook (pdf-occur-buffer-mode . luke/pdf-occur-buffer-map)
+  )
 
 (use-package project
   :after (minibuffer icomplete icomplete-vertical)
