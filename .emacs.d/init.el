@@ -86,6 +86,13 @@
   (kill-buffer)
 )
 
+(defun luke/kill-buffer-and-window ()
+  "Kills buffer, also deletes window if there is more than one active."
+  (interactive)
+  (kill-buffer)
+  (when (> (count-windows) 1)
+    (delete-window)))
+
 (defun luke/kill-all-buffers ()
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
@@ -265,18 +272,18 @@
 (use-package man
   :config
   (defun man-mode-keybindings ()
-    (define-key evil-normal-state-local-map (kbd "\r")  'man-follow)
-    (define-key evil-normal-state-local-map (kbd "p")   'Man-next-section)
-    (define-key evil-normal-state-local-map (kbd "o")   'Man-previous-section)
-    (define-key evil-normal-state-local-map (kbd "\en") 'Man-next-manpage)
-    (define-key evil-normal-state-local-map (kbd "\ep") 'Man-previous-manpage)
-    (define-key evil-normal-state-local-map (kbd ".")   'beginning-of-buffer)
-    (define-key evil-normal-state-local-map (kbd "r")   'Man-follow-manual-reference)
-    (define-key evil-normal-state-local-map (kbd "g")   'Man-goto-section)
-    (define-key evil-normal-state-local-map (kbd "s")   'Man-goto-see-also-section)
-    (define-key evil-normal-state-local-map (kbd "q")   'Man-kill)
-    (define-key evil-normal-state-local-map (kbd "u")   'Man-update-manpage)
-    (define-key evil-normal-state-local-map (kbd "m")   'man))
+    (define-key evil-normal-state-local-map (kbd "\r")    'man-follow)
+    (define-key evil-normal-state-local-map (kbd "C-j")  'Man-next-section)
+    (define-key evil-normal-state-local-map (kbd "C-k")  'Man-previous-section)
+    (define-key evil-normal-state-local-map (kbd "\en")   'Man-next-manpage)
+    (define-key evil-normal-state-local-map (kbd "\ep")   'Man-previous-manpage)
+    (define-key evil-normal-state-local-map (kbd "g")     'beginning-of-buffer)
+    (define-key evil-normal-state-local-map (kbd "r")     'Man-follow-manual-reference)
+    (define-key evil-normal-state-local-map (kbd "SPC g") 'Man-goto-section)
+    (define-key evil-normal-state-local-map (kbd "s")     'Man-goto-see-also-section)
+    (define-key evil-normal-state-local-map (kbd "q")     'Man-kill)
+    (define-key evil-normal-state-local-map (kbd "u")     'Man-update-manpage)
+    (define-key evil-normal-state-local-map (kbd "m")     'man))
 
   :hook ((Man-mode . man-mode-keybindings))
   )
@@ -336,6 +343,17 @@
               ("e" . nil)
               )
   :hook (Info-mode . luke/info-mode-settings)
+  )
+
+(use-package info-colors
+  :ensure t
+  :hook (Info-selection . info-colors-fontify-node))
+
+(use-package help-mode
+  :config
+  (defun luke/help-mode-settings ()
+    (define-key evil-normal-state-local-map (kbd "q") 'luke/kill-buffer-and-window))
+  :hook (help-mode . luke/help-mode-settings)
   )
 
 (use-package vc
@@ -581,21 +599,11 @@
       (when mini
         (select-window mini))))
 
-  (defun describe-symbol-at-point (&optional arg)
-    "Get help (documentation) for the symbol at point.
-With a prefix argument, switch to the \\*Help\\* window. If that
-is already focused, switch to the most recently used window
-instead"
-    (interactive "P")
+  (defun describe-symbol-at-point ()
+    (interactive)
     (let ((symbol (symbol-at-point)))
       (when symbol
-        (describe-symbol symbol)))
-    (when current-prefix-arg
-      (let ((help (get-buffer-window "*Help*")))
-        (when help
-          (if (not (eq (selected-window) help))
-              (select-window help)
-            (select-window (get-mru-window)))))))
+        (describe-symbol symbol))))
 
   (defun completion-list-buffer-bindings ()
     (define-key evil-normal-state-local-map (kbd "H")        'describe-symbol-at-point)
@@ -698,7 +706,7 @@ instead"
     (define-key evil-normal-state-local-map (kbd "SPC o")   'pdf-occur)
 
     ;; Other settings
-    (set (make-local-variable 'evil-normal-state-cursor) (list nil))
+    (set (make-local-variable 'evil-normal-state-cursor) (list nil)) ; Get rid of cursor
     (display-line-numbers-mode))
 
   :hook (pdf-view-mode . luke/pdf-view-mode-hook)
