@@ -490,7 +490,7 @@
     (define-key evil-normal-state-local-map "y" 'dired-do-copy)
     (define-key evil-normal-state-local-map "r" 'dired-do-rename)
     (define-key evil-normal-state-local-map "v" 'dired-do-kill-lines)
-    (define-key evil-normal-state-local-map "\C-g" 'revert-buffer)
+    (define-key evil-normal-state-local-map "R" 'revert-buffer)
     (define-key evil-normal-state-local-map "i" 'dired-maybe-insert-subdir)
     (define-key evil-normal-state-local-map "\C-j" 'dired-next-subdir)
     (define-key evil-normal-state-local-map "\C-k" 'dired-prev-subdir)
@@ -747,10 +747,6 @@
   (setq amx-show-key-bindings nil)
   (amx-mode 1))
 
-;; Paren zone
-(electric-pair-mode 1)
-(setq-default show-paren-delay 0)
-(show-paren-mode 1)
 
 (use-package emacs
   :config
@@ -799,11 +795,13 @@
 (add-hook 'after-init-hook
           (lambda ()
             (blink-cursor-mode 0)))
+(electric-pair-mode 1)
+(setq-default show-paren-delay 0)
+(show-paren-mode 1)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
-;; Clean Screen
 (add-to-list 'default-frame-alist '(font . "Hack-11"))
 (setq inhibit-startup-screen t)
 (setq scroll-conservatively 100)
