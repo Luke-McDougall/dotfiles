@@ -247,6 +247,7 @@
 	      ("SPC \r"    . luke/open-terminal-in-default-directory)
               ("<f5>"      . compile)
 	      (";"         . evil-ex)
+	      ("U"         . evil-upcase)
 
 	      :map evil-insert-state-map
 	      ("C-j"       . luke/jump-to-closing-paren)
@@ -256,6 +257,10 @@
 	      ("H"         . evil-first-non-blank-of-visual-line)
 	      ("L"         . evil-end-of-visual-line)
 	      ("SPC e"     . luke/eval-region-replace)
+
+              :map evil-motion-state-map
+	      ("H"         . evil-first-non-blank-of-visual-line)
+	      ("L"         . evil-end-of-visual-line)
           )
 )
 
@@ -539,17 +544,20 @@
   (setq-default c-basic-offset 4)
   (setq-default c-default-style "k&r")
 
-  (defun luke/java-settings ()
-    ;; Indent settings
+  (defun luke/case-indent-settings ()
+    "My preferred settings for case statement indenting"
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'case-label '+)
     (c-set-offset 'inline-open 0)
-    (c-set-offset 'statement-case-intro 0)
+    (c-set-offset 'statement-case-intro 0))
 
-    ;; Other
+  (defun luke/java-settings ()
+    "Set case indent settings and turn on subword mode for java files"
+    (luke/case-indent-settings)
     (subword-mode 1))
 
-  :hook ((java-mode . luke/java-settings))
+  :hook ((java-mode . luke/java-settings)
+         (c-mode    . luke/case-indent-settings))
   )
 
 (use-package rust-mode
