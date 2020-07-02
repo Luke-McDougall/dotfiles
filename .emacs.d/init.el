@@ -704,6 +704,7 @@
     (define-key evil-normal-state-local-map (kbd "C-j")     'pdf-view-next-page-command)
     (define-key evil-normal-state-local-map (kbd "C-k")     'pdf-view-previous-page-command)
     (define-key evil-normal-state-local-map (kbd "SPC g l") 'pdf-view-goto-label)
+    (define-key evil-normal-state-local-map (kbd "\r")      'pdf-links-action-perform)
     (define-key evil-normal-state-local-map (kbd "-")       'pdf-view-shrink)
     (define-key evil-normal-state-local-map (kbd "+")       'pdf-view-enlarge)
     (define-key evil-normal-state-local-map (kbd "0")       'pdf-view-scale-reset)
@@ -714,8 +715,7 @@
     (define-key evil-normal-state-local-map (kbd "SPC o")   'pdf-occur)
 
     ;; Other settings
-    (set (make-local-variable 'evil-normal-state-cursor) (list nil)) ; Get rid of cursor
-    (display-line-numbers-mode))
+    (set (make-local-variable 'evil-normal-state-cursor) (list nil))) ; Get rid of cursor
 
   :hook (pdf-view-mode . luke/pdf-view-mode-hook)
   )
@@ -799,6 +799,24 @@
 (use-package xah-math-input
   :ensure t)
 
+(use-package display-line-numbers
+  :config
+  (defcustom display-line-numbers-exempt-modes '(pdf-view-mode)
+    "Major modes on which to disable line number mode, exempts them from global requirement"
+    :group 'display-line-numbers
+    :type  'list
+    :version "green")
+
+  (defun display-line-numbers--turn-on ()
+    "Turn on line numbers but exempting certain major modes defined in display-line-numbers-exempt-modes"
+    (if (and
+         (not (member major-mode display-line-numbers-exempt-modes))
+         (not (minibufferp)))
+        (display-line-numbers-mode)))
+
+  (global-display-line-numbers-mode)
+  (setq-default display-line-numbers-type 'relative))
+
 (add-hook 'after-init-hook 'global-hl-line-mode)
 (add-hook 'after-init-hook
           (lambda ()
@@ -813,8 +831,6 @@
 (add-to-list 'default-frame-alist '(font . "Hack-11"))
 (setq inhibit-startup-screen t)
 (setq scroll-conservatively 100)
-(global-display-line-numbers-mode t)
-(setq-default display-line-numbers-type 'relative)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Turn the garbage collector back on
