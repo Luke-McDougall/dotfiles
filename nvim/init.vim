@@ -7,6 +7,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
 Plug 'itchyny/lightline.vim'
+Plug 'machakann/vim-highlightedyank'
 call plug#end()
 
 " Colourscheme
@@ -22,6 +23,7 @@ set shiftwidth=4
 set expandtab
 set backspace=2
 let delimitMate_expand_cr = 1
+let g:highlightedyank_highlight_duration = 500
 
 set autoindent
 set smartindent
@@ -52,6 +54,7 @@ set encoding=utf-8
 :nmap <Leader>wk <C-w>k
 :nmap <Leader>ww <C-w>o
 :nmap <Leader>ff :Files<CR>
+:nmap <Leader>fr :History<CR>
 :nmap <Leader>bl :Lines<CR>
 :nmap <Leader>bs :Buffers<CR>
 :nmap <Leader>bq :bd<CR>

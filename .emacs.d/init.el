@@ -164,6 +164,9 @@
     (find-file-other-window "~/.emacs.d/init.el"))
 
   (evil-ex-define-cmd "format" 'luke/format-rust)
+  (evil-ex-define-cmd "build"  'luke/cargo-build)
+  (evil-ex-define-cmd "test"   'luke/cargo-test)
+  (evil-ex-define-cmd "run"    'luke/cargo-run)
 
   (evil-mode 1)
   :bind (:map evil-normal-state-map
@@ -247,13 +250,14 @@
 	      ("SPC \r"    . luke/open-terminal-in-default-directory)
               ("<f5>"      . compile)
 	      (";"         . evil-ex)
-	      ("U"         . evil-upcase)
+              ("SPC x"     . amx)
 
 	      :map evil-insert-state-map
 	      ("C-j"       . luke/jump-to-closing-paren)
 	      ("C-k"       . evil-normal-state)
 
               :map evil-visual-state-map
+	      (";"         . evil-ex)
 	      ("H"         . evil-first-non-blank-of-visual-line)
 	      ("L"         . evil-end-of-visual-line)
 	      ("SPC e"     . luke/eval-region-replace)
@@ -560,12 +564,28 @@
          (c-mode    . luke/case-indent-settings))
   )
 
+(use-package gdb-mi
+  :init
+  (setq gdb-many-windows t))
+
 (use-package rust-mode
   :ensure t
   :config
   (defun luke/format-rust ()
     (interactive)
     (shell-command (concat  "~/.cargo/bin/rustfmt " buffer-file-name)))
+
+  (defun luke/cargo-build ()
+    (interactive)
+    (compile "~/.cargo/bin/cargo build"))
+
+  (defun luke/cargo-test ()
+    (interactive)
+    (compile "~/.cargo/bin/cargo test"))
+
+  (defun luke/cargo-run ()
+    (interactive)
+    (shell-command "~/.cargo/bin/cargo run"))
   )
 
 ;; Recentf
@@ -793,7 +813,7 @@
     (load-theme 'modus-operandi t))
 
   :bind (("<f3>" . modus-themes-toggle))
-  :hook (after-init . modus-operandi)
+  :hook (after-init . modus-vivendi)
   )
 
 (use-package xah-math-input
@@ -808,7 +828,7 @@
     :version "green")
 
   (defun display-line-numbers--turn-on ()
-    "Turn on line numbers but exempting certain major modes defined in display-line-numbers-exempt-modes"
+    "Turn on line numbers but exempting certain major modes defined in `display-line-numbers-exempt-modes'"
     (if (and
          (not (member major-mode display-line-numbers-exempt-modes))
          (not (minibufferp)))
